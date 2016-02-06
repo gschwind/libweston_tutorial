@@ -150,7 +150,7 @@ int main(int argc, char ** argv) {
 	 * xdg_shell extension.
 	 **/
 	if (wl_global_create(dpy, &xdg_shell_interface, 1,
-				  &cmp, lwt_bind_xdg_shell) == NULL)
+				  cmp, lwt_bind_xdg_shell) == NULL)
 		return -1;
 
 	/**
