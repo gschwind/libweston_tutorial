@@ -94,8 +94,46 @@ int main(int argc, char ** argv) {
 
 
 	/**
+	 * create the solid color background
+	 **/
+
+	/* create the background surface */
+	struct weston_surface * background =
+			weston_surface_create(cmp->wcmp);
+
+	/* define this surface as solid color */
+	weston_surface_set_color(background, 0.5, 0.5, 0.5, 1.0);
+
+	/* set the size of the background equals to the size of desktop */
+    weston_surface_set_size(background, 800, 600);
+
+    /* define the opaque area for this surface */
+    pixman_region32_fini(&background->opaque);
+    pixman_region32_init_rect(&background->opaque, 0, 0, 800, 600);
+
+    /* tell weston that the surface is durty */
+    weston_surface_damage(background);
+
+    /**
+     * create a view for the surface
+     *
+     * each surface can have several view and transform, i.e.
+     * can be thumbnail some where and a regular window else where.
+     **/
+    struct weston_view * bview =
+    		weston_view_create(background);
+
+    /* set position and force weston refresh */
+	weston_view_set_position(bview, 0, 0);
+	background->timeline.force_refresh = 1;
+
+	/* add this view at the top of the default layer */
+	weston_layer_entry_insert(&cmp->default_layer.view_list,
+			&bview->layer_link);
+
+	/**
 	 * run the wayland display
-	 */
+	 **/
     wl_display_run(dpy);
 
 }
