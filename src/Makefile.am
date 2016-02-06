@@ -22,6 +22,8 @@ libweston_tutorial_SOURCES = \
 	xdg_shell.h \
 	xdg_shell_surface.c \
 	sdg_shell_surface.h \
+	xdg_shell_surface_popup.c \
+	sdg_shell_surface_popup.h \
 	xdg-shell-protocol.c
 	
 libweston_tutorial_LDADD = \

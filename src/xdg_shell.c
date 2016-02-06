@@ -8,6 +8,7 @@
 #include "xdg-shell-server-protocol.h"
 #include "xdg_shell.h"
 #include "xdg_shell_surface.h"
+#include "xdg_shell_surface_popup.h"
 
 static void
 lwt_xdg_shell_delete_resource(struct wl_resource *resource) {
@@ -34,7 +35,6 @@ lwt_xdg_get_xdg_surface(struct wl_client *client,
 		    struct wl_resource *surface_resource) {
 	weston_log("call %s\n", __PRETTY_FUNCTION__);
 
-	/* In our case nullptr */
 	struct weston_surface * surface =
 		(struct weston_surface *)wl_resource_get_user_data(surface_resource);
 	struct lwt_xdg_shell * shell =
@@ -54,6 +54,15 @@ lwt_xdg_get_xdg_popup(struct wl_client *client,
 		  uint32_t serial,
 		  int32_t x, int32_t y) {
 	weston_log("call %s\n", __PRETTY_FUNCTION__);
+
+	struct weston_surface * surface =
+		(struct weston_surface *)(wl_resource_get_user_data(surface_resource));
+	struct lwt_xdg_shell * shell =
+			(struct lwt_xdg_shell *)wl_resource_get_user_data(resource);
+
+	lwt_xdg_shell_surface_popup_create(client, shell, id, surface, x, y);
+
+
 }
 
 static void
