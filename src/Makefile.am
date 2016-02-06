@@ -11,13 +11,17 @@ AM_CFLAGS =  \
 
 
 BUILT_SOURCES = \
+	xdg-shell-protocol.c \
 	xdg-shell-server-protocol.h
 
 libweston_tutorial_SOURCES = \
-	main.c \ 
+	main.c \
 	compositor.c \
-	compositor.h
-
+	compositor.h \
+	xdg_shell.c \
+	xdg_shell.h \
+	xdg-shell-protocol.c
+	
 libweston_tutorial_LDADD = \
 	$(X11_LIBS) \
 	$(PIXMAN_LIBS) \

@@ -23,6 +23,20 @@
 #include "xdg-shell-server-protocol.h"
 
 #include "compositor.h"
+#include "xdg_shell.h"
+
+
+static void
+lwt_bind_xdg_shell(
+		struct wl_client * client,
+		void * data,
+		uint32_t version,
+		uint32_t id) {
+	weston_log("call %s\n", __PRETTY_FUNCTION__);
+	lwt_xdg_shell_create(client,
+			(struct lwt_compositor *)data, id);
+
+}
 
 int main(int argc, char ** argv) {
 
@@ -130,6 +144,14 @@ int main(int argc, char ** argv) {
 	/* add this view at the top of the default layer */
 	weston_layer_entry_insert(&cmp->default_layer.view_list,
 			&bview->layer_link);
+
+	/**
+	 * setup the callback when a client bind to the
+	 * xdg_shell extension.
+	 **/
+	if (wl_global_create(dpy, &xdg_shell_interface, 1,
+				  &cmp, lwt_bind_xdg_shell) == NULL)
+		return -1;
 
 	/**
 	 * run the wayland display
