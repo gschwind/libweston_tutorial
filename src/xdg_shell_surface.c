@@ -5,8 +5,8 @@
  *      Author: gschwind
  */
 
-#include <wayland-util.h>
 #include "xdg_shell_surface.h"
+#include "move_grab.h"
 
 static void
 lwt_weston_shell_surface_configure(struct weston_surface * s,
@@ -60,6 +60,25 @@ lwt_xdg_surface_move(struct wl_client *client, struct wl_resource *resource,
 		 struct wl_resource *seat_resource, uint32_t serial)
 {
 	weston_log("call %s\n", __PRETTY_FUNCTION__);
+
+	struct weston_seat * seat =
+			(struct weston_seat*)wl_resource_get_user_data(seat_resource);
+	struct lwt_xdg_shell_surface * xdg_surface =
+			(struct lwt_xdg_shell_surface *)wl_resource_get_user_data(resource);
+
+	struct lwt_move_grab * grab_data =
+			lwt_move_grab_create();
+
+	/* get the current global position of the client */
+	weston_view_to_global_float(xdg_surface->view, 0.0f, 0.0f,
+			&grab_data->origin_x, &grab_data->origin_y);
+
+	wl_list_remove(&(xdg_surface->view->layer_link.link));
+	wl_list_insert(&(xdg_surface->shell->cmp->default_layer.view_list.link),
+			&(xdg_surface->view->layer_link.link));
+
+	weston_pointer_start_grab(seat->pointer, &grab_data->base);
+
 }
 
 static void

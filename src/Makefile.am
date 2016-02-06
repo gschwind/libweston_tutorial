@@ -18,6 +18,8 @@ libweston_tutorial_SOURCES = \
 	main.c \
 	compositor.c \
 	compositor.h \
+	move_grab.c \
+	move_grab.h \
 	xdg_shell.c \
 	xdg_shell.h \
 	xdg_shell_surface.c \
